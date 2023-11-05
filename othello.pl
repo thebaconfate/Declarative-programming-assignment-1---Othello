@@ -32,16 +32,16 @@ get_col_value(Row_number, Column_number, Board_state, Variable) :-
 get_i_j_value(I, J, Board_state, Variable) :-
     get_col_value(I, J, Board_state, Variable).
 
-column(Row, Column_number, Board_state, [A, B, C, D, E, F, G, H]) :-
-    Row < 9,
-    nth1(Row, [A, B, C, D, E, F, G, H], X),
-    get_col_value(Row, Column_number, Board_state, X),
+column(_ , _ , _ , []).
+column(Row, Column_number, Board_state, [Head | Tail]) :-
+    get_col_value(Row, Column_number, Board_state, Head),
     New_row is Row + 1,
-    column(New_row, Column_number, Board_state, [A, B, C, D, E, F, G, H]).
+    column(New_row, Column_number, Board_state, Tail).
 
 column(Column_number, Board_state, col(Column_number, A, B, C, D, E, F, G, H)) :- 
     between0_9(Column_number),
-    column(1, Column_number, Board_state, [A, B, C, D, E, F, G, H]).
+    Starting_row = 1,
+    column(Starting_row, Column_number, Board_state, [A, B, C, D, E, F, G, H]).
 
 square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)) :- 
     between0_9(CoordX), 
@@ -61,3 +61,4 @@ initial_board([
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ]).
+
