@@ -6,6 +6,9 @@ fill]).
 %Board representation
 
 
+%Board representation
+
+
 player_1_character('*').
 player_2_character('o').
 blank_character(' ').
