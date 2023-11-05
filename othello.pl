@@ -56,7 +56,8 @@ square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)) :-
     get_i_j_value(CoordX, CoordY, Board_state, Piece).
 
 empty_square(CoordX, CoordY, Board_state) :- 
-    square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, ' ')).
+    square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)),
+    is_empty(Piece).
 
 initial_board([
     [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -69,3 +70,11 @@ initial_board([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ]).
 
+board_of_Xpieces([], _).
+board_of_Xpieces([Head_rows | Rest_rows], Piece) :- 
+    list_to_set(Head_rows, [Piece]),
+    board_of_Xpieces(Rest_rows, Piece).
+
+empty_board(Board) :- 
+    is_empty(Piece),
+    board_of_Xpieces(Board, Piece).
