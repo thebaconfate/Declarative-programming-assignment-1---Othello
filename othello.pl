@@ -2,6 +2,9 @@
 io,
 fill] ).
 
+%Board representation
+
+
 player_1_character('*').
 player_2_character('o').
 blank_character(' ').
@@ -48,15 +51,18 @@ column(Column_number, Board_state, col(Column_number, A, B, C, D, E, F, G, H)) :
     between0_9(Column_number),
     column(Column_number, Board_state, [A, B, C, D, E, F, G, H]).
 
+% square(?Integer-X, ?Integer-Y, ?Board_state, ?squ(?Integer-X, ?Integer-Y, ?Piece)) :- Succeeds if Piece can be unified with the value stored in the Integer-th row and Integer-th column of Board_state. The coordinates must also be between 0 and 9.
 square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)) :- 
     between0_9(CoordX), 
     between0_9(CoordY),
     get_i_j_value(CoordX, CoordY, Board_state, Piece).
 
+% empty_square(?Integer-X, ?Integer-Y, ?Board_state) :- Succeeds if Piece can be unified the empty square symbol and the value of the square at the given coordinates. The coordinates must also be between 0 and 9.
 empty_square(CoordX, CoordY, Board_state) :- 
-    square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)),
-    is_empty(Piece).
+    is_empty(Piece),
+    square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)).
 
+%initial_board(?Board_state) :- Succeeds if Board_state can be unified with the initial board state
 initial_board([
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -68,11 +74,14 @@ initial_board([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ]).
 
+%board_of_Xpieces(?Board_state, ?Piece) :- Succeeds if Board_state can be unified with a board state where all the squares are filled with Piece.
 board_of_Xpieces([], _).
 board_of_Xpieces([Head_rows | Rest_rows], Piece) :- 
     list_to_set(Head_rows, [Piece]),
     board_of_Xpieces(Rest_rows, Piece).
 
+%empty_board(?Board_state) :- Succeeds if all the squares of the board van be unified with Piece and the empty square character.
 empty_board(Board) :- 
     is_empty(Piece),
     board_of_Xpieces(Board, Piece).
+
