@@ -37,18 +37,16 @@ get_i_j_value(I, J, Board_state, Variable) :-
     nth1(I, Board_state, Row),
     nth1(J, Row, Variable).
 
-% column(?Any, ?Any, ?Board_state, ?Empty_List) :- Base case for the recursive call of column/4
-column(_, _, _, []).
-% column(?Integer, ?Integer, ?Board_state, ?List) :- Succeeds if List can be unified with the Integer-th column of Board_state
-column(Row_number, Column_number, Board_state, [Head | Tail]) :-
-    get_i_j_value(Row_number, Column_number, Board_state, Head),
-    New_row_number is Row_number + 1,
-    column(New_row_number, Column_number, Board_state, Tail).
+% column(?Any, ?Board_state, ?Empty_List) :- Base case for the recursive call of column/4
+column(_, [], []).
+% column(?Integer, ?Board_state, ?List) :- Succeeds if List can be unified with the Integer-th column of Board_state
+column(Column_number, [Head_Row | Tail_rows], [Head_variable | Tail_variable]) :-
+    nth1(Column_number, Head_Row, Head_variable),
+    column(Column_number, Tail_rows , Tail_variable).
 % column(?Integer, ?Board_state, ?List) :- Succeeds if List can be unified with the Integer-th column of Board_state
 column(Column_number, Board_state, col(Column_number, A, B, C, D, E, F, G, H)) :- 
     between0_9(Column_number),
-    Starting_row = 1,
-    column(Starting_row, Column_number, Board_state, [A, B, C, D, E, F, G, H]).
+    column(Column_number, Board_state, [A, B, C, D, E, F, G, H]).
 
 square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)) :- 
     between0_9(CoordX), 
