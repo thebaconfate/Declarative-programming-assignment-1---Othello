@@ -4,19 +4,12 @@ io,
 fill]).
 
 %Board representation
-
-
-%Board representation
-
-
 player_1_character('*').
 player_2_character('o').
 blank_character(' ').
 
-
 %some abstractions
 between0_9(Number) :- 0 < Number, Number < 9.
-
 
 % predicates to identify symbols
 % is_black(?Character) :- Succeeds if Character is player 1's symbol
