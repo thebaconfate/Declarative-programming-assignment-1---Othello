@@ -1,5 +1,5 @@
 /* abstract square filling predicate for Othello practical */
-
+% code provided by Prof. Dr. Geraint Wiggins & Steve Homer for the course declarative programming
 :- module( fill, [fill_and_flip_squares/5] ).
 
 fill_and_flip_squares( X, Y, Player, Board, NewBoard ) :-

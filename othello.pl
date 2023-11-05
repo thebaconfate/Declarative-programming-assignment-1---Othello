@@ -22,8 +22,7 @@ other_player(Player_1_symbol, Player_2_symbol) :- is_black(Player_1_symbol), is_
 % 
 row(Row_number, Board_state, row(Row_number, A, B, C, D, E, F, G, H )) :- 
     between0_9(Row_number), 
-    Row = [A, B, C, D, E, F, G, H],
-    nth1(Row_number, Board_state, Row).
+    nth1(Row_number, Board_state, [A, B, C, D, E, F, G, H]).
 
 get_col_value(Row_number, Column_number, Board_state, Variable) :-
     nth1(Row_number, Board_state, Row),
@@ -33,16 +32,16 @@ get_col_value(Row_number, Column_number, Board_state, Variable) :-
 get_i_j_value(I, J, Board_state, Variable) :-
     get_col_value(I, J, Board_state, Variable).
 
+column(Row, Column_number, Board_state, [A, B, C, D, E, F, G, H]) :-
+    Row < 9,
+    nth1(Row, [A, B, C, D, E, F, G, H], X),
+    get_col_value(Row, Column_number, Board_state, X),
+    New_row is Row + 1,
+    column(New_row, Column_number, Board_state, [A, B, C, D, E, F, G, H]).
+
 column(Column_number, Board_state, col(Column_number, A, B, C, D, E, F, G, H)) :- 
     between0_9(Column_number),
-    get_col_value(1, Column_number, Board_state, A),
-    get_col_value(2, Column_number, Board_state, B),
-    get_col_value(3, Column_number, Board_state, C),
-    get_col_value(4, Column_number, Board_state, D),
-    get_col_value(5, Column_number, Board_state, E),
-    get_col_value(6, Column_number, Board_state, F),
-    get_col_value(7, Column_number, Board_state, H),
-    get_col_value(8, Column_number, Board_state, G).
+    column(1, Column_number, Board_state, [A, B, C, D, E, F, G, H]).
 
 square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)) :- 
     between0_9(CoordX), 
