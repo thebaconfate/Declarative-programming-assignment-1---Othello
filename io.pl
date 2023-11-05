@@ -1,5 +1,5 @@
 /* IO module for Othello practical */
-% code provided by Prof. Dr. Geraint Wiggins & Homerfor the course declarative programming
+% code provided by Prof. Dr. Geraint Wiggins & Steve Homer for the course declarative programming
 :- module( io, [display_board/1, report_move/3, report_no_move/1, welcome/0,
 		get_legal_move/4, report_winner/1, report_illegal/0,
 		report_stalemate/0] ).
