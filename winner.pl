@@ -13,3 +13,9 @@ count_pieces([Head | Tail], Black, White) :-
     count_pieces(Tail, RestBlack, RestWhite),
     Black is RowBlack + RestBlack,
     White is RowWhite + RestWhite.
+
+and_the_winner_is(Board, Winner) :- 
+    count_pieces(Board, Black, White), 
+    Black > White, is_black(Winner);
+    Black < White, is_white(Winner);
+    Black = White, is_empty(Winner). 
