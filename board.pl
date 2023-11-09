@@ -78,7 +78,14 @@ board_of_Xpieces([Head_rows | Rest_rows], Piece) :-
     board_of_Xpieces(Rest_rows, Piece).
 
 %empty_board(?Board_state) :- Succeeds if all the squares of the board van be unified with Piece and the empty square character.
-empty_board(Board) :- 
-    is_empty(Piece),
-    board_of_Xpieces(Board, Piece).
+empty_board([
+    [AA,AB,AC,AD,AE,AF,AG,AH],
+    [BA,BB,BC,BD,BE,BF,BG,BH],
+    [CA,CB,CC,CD,CE,CF,CG,CH],
+    [DA,DB,DC,DD,DE,DF,DG,DH],
+    [EA,EB,EC,ED,EE,EF,EG,EH],
+    [FA,FB,FC,FD,FE,FF,FG,FH],
+    [GA,GB,GC,GD,GE,GF,GG,GH],
+    [HA,HB,HC,HD,HE,HF,HG,HH]
+    ]).
 
