@@ -10,6 +10,7 @@ play :-
     % TODO implement the predicate below:
     % play(Black, Board).
 
+% enclosing_piece(X, Y, Player, Board, U, V, N) :-
 
 
 
