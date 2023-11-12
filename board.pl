@@ -1,4 +1,4 @@
-:- module(board, [row/3, column/3, is_black/1, is_white/1, is_empty/1, initial_board/1, other_player/2]).
+:- module(board, [row/3, column/3, is_black/1, is_white/1, is_empty/1, initial_board/1, other_player/2, square/4]).
 :- use_module([library(lists),
 io,
 fill]).
@@ -33,9 +33,9 @@ row(Row_number, Board_state, row(Row_number, A, B, C, D, E, F, G, H )) :-
     nth1(Row_number, Board_state, [A, B, C, D, E, F, G, H]).
 
 % get_i_j_value(?Integer, ?Integer, ?Board_state, ?Variable) :- Succeeds if Variable can be unified to the value stored in the Integer-th row and Integer-th column of Board_state
-get_i_j_value(I, J, Board_state, Variable) :-
-    nth1(I, Board_state, Row),
-    nth1(J, Row, Variable).
+get_x_y_value(X, Y, Board_state, Variable) :-
+    nth1(Y, Board_state, Row),
+    nth1(X, Row, Variable).
 
 % column(?Any, ?Board_state, ?Empty_List) :- Base case for the recursive call of column/4
 column(_, [], []).
@@ -52,7 +52,7 @@ column(Column_number, Board_state, col(Column_number, A, B, C, D, E, F, G, H)) :
 square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece)) :- 
     between0_9(CoordX), 
     between0_9(CoordY),
-    get_i_j_value(CoordX, CoordY, Board_state, Piece).
+    get_x_y_value(CoordX, CoordY, Board_state, Piece).
 
 % empty_square(?Integer-X, ?Integer-Y, ?Board_state) :- Succeeds if Piece can be unified the empty square symbol and the value of the square at the given coordinates. The coordinates must also be between 0 and 9.
 empty_square(CoordX, CoordY, Board_state) :- 
