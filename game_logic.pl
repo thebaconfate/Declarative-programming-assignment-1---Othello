@@ -70,17 +70,17 @@ construct_diagonal_inverted(start(1, 8), end(8, 1), [
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ], List).
 */
-enclosing_piece(X, Y, Player, Board, U, Y, N) :-
+enclosing_piece_try(X, Y, Player, Board, U, Y, N) :-
     row(Y, Board, row(Y, A, B, C, D, E, F, G, H)),
     U < X, match_list(U, X, N, Player, [H, G, F, E, D, C, B, A]);
     row(Y, Board, row(Y, A, B, C, D, E, F, G, H)),
     X < U, match_list(X, U, N, Player, [A, B, C, D, E, F, G, H]).
-enclosing_piece(X, Y, Player, Board, X, V, N) :-
+enclosing_piece_try(X, Y, Player, Board, X, V, N) :-
     column(X, Board, col(X, A, B, C, D, E, F, G, H)),
     Y < V, match_list(Y, V, N, Player, [A, B, C, D, E, F, G, H]);
     column(X, Board, col(X, A, B, C, D, E, F, G, H)),
     V < Y, match_list(V, Y, N, Player, [H, G, F, E, D, C, B, A]).
-enclosing_piece(X, Y, Player, Board, U, V, N) :-
+enclosing_piece_try(X, Y, Player, Board, U, V, N) :-
     X < U, Y < V, construct_diagonal(start(X, Y), end(U, V), Board, List),
     NewEnd is U - X + 1, match_list(1, NewEnd, N, Player, List);
     U < X, V < Y, construct_diagonal(start(U, V), end(X, Y), Board, List),
@@ -97,7 +97,7 @@ enclosing_piece(X, Y, Player, Board, U, V, N) :-
 
 /* 
 Horizontal testing: Scenario 1:
-enclosing_piece(6, 4, '*', [
+enclosing_piece_try(6, 4, '*', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -110,7 +110,7 @@ enclosing_piece(6, 4, '*', [
 
 
 Scenario 2: 
-enclosing_piece(3, 4, '*', [
+enclosing_piece_try(3, 4, '*', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -122,7 +122,7 @@ enclosing_piece(3, 4, '*', [
     ], 6, 4, N).
 
 Vertical testing: Scenario 1: 
-enclosing_piece(4, 3, '*', [
+enclosing_piece_try(4, 3, '*', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -134,7 +134,7 @@ enclosing_piece(4, 3, '*', [
     ], 4, 5, N).
 
 Scenario 2:
-enclosing_piece(4, 6, '*', [
+enclosing_piece_try(4, 6, '*', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ','*',' ',' ',' ',' '],
@@ -146,7 +146,7 @@ enclosing_piece(4, 6, '*', [
     ], 4, 3, N).
 
 Diagonal testing: Scenario 1:
-enclosing_piece(3,3, '*', [
+enclosing_piece_try(3,3, '*', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ','*',' '],
     [' ',' ',' ',' ',' ','*',' ',' '],
@@ -158,7 +158,7 @@ enclosing_piece(3,3, '*', [
     ], 7, 7, N).
 
 scenario 3:
-enclosing_piece(7,7, '*', [
+enclosing_piece_try(7,7, '*', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ','*',' '],
     [' ',' ','*',' ',' ','*',' ',' '],
@@ -170,7 +170,7 @@ enclosing_piece(7,7, '*', [
     ], 3, 3, N).
 
 scenario 3:
-enclosing_piece(3,6, '*', [
+enclosing_piece_try(3,6, '*', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ','*',' '],
     [' ',' ','*',' ',' ','*',' ',' '],
@@ -182,7 +182,7 @@ enclosing_piece(3,6, '*', [
     ], 7, 2, N).
 
 scenario 4
-enclosing_piece(7,2, '*', [
+enclosing_piece_try(7,2, '*', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ','*',' ',' ',' ',' ',' '],
