@@ -194,3 +194,8 @@ enclosing_piece_try(7,2, '*', [
     ], 3, 6, N).
 
 */
+construct_locationlist_player_pieces(Player, Board, Locationlist) :-
+    findall(squ(X, Y, Player), square(X, Y, Board, squ(X, Y, Player)), Locationlist).
+
+enclosing_piece(X, Y, Player, Board, U, V, N) :-
+    construct_locationlist_player_pieces(Player, Board, Locationlist).
