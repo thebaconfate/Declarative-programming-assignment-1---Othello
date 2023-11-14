@@ -332,4 +332,4 @@ no_more_legal_squares([
 
 play(Player, Board_state) :- 
     no_more_legal_squares(Board_state),
-    and_the_winner_is(Board_state, Player);
+    and_the_winner_is(Board_state, Winner).

@@ -1,5 +1,5 @@
-:- module(winner, [count_pieces/3]).
-:- use_module([board]).
+:- module(winner, [count_pieces/3, and_the_winner_is/2]).
+:- use_module([board, io]).
 
 
 count_pieces_row([], 0, 0).
@@ -14,9 +14,12 @@ count_pieces([Head | Tail], Black, White) :-
     Black is RowBlack + RestBlack,
     White is RowWhite + RestWhite.
 
+decide_winner(Black, White, Winner) :- 
+    Black > White, is_black(Winner), report_winner(Winner);
+    Black < White, is_white(Winner), report_winner(Winner);
+    Black = White, is_empty(Winner), 
+    format( 'It\'s a draw black: ~w, white : ~w!\n\n', [Black, White]).
+
 and_the_winner_is(Board, Winner) :- 
     count_pieces(Board, Black, White), 
-    Black > White, is_black(Winner);
-    Black < White, is_white(Winner);
-    %print out the winner or draw if there is no winner
-    Black = White, is_empty(Winner). 
+    decide_winner(Black, White, Winner).
