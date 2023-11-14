@@ -1,5 +1,5 @@
 :- module(game_logic, []).
-:- use_module([library(lists), io, fill, board/*, winner*/]).
+:- use_module([library(lists), io, fill, board, winner]).
 
 play :- 
     welcome,
@@ -329,3 +329,7 @@ no_more_legal_squares([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ]).
 */
+
+play(Player, Board_state) :- 
+    no_more_legal_squares(Board_state),
+    and_the_winner_is(Board_state, Player);

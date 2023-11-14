@@ -18,4 +18,5 @@ and_the_winner_is(Board, Winner) :-
     count_pieces(Board, Black, White), 
     Black > White, is_black(Winner);
     Black < White, is_white(Winner);
+    %print out the winner or draw if there is no winner
     Black = White, is_empty(Winner). 
