@@ -18,7 +18,7 @@ decide_winner(Black, White, Winner) :-
     Black > White, is_black(Winner), report_winner(Winner);
     Black < White, is_white(Winner), report_winner(Winner);
     Black = White, is_empty(Winner), 
-    format( 'It\'s a draw black: ~w, white : ~w!\n\n', [Black, White]).
+    report_stalemate.
 
 and_the_winner_is(Board, Winner) :- 
     count_pieces(Board, Black, White), 

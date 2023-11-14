@@ -1,16 +1,16 @@
-:- module(game_logic, []).
+:- module(game_logic, [row/3, empty_square/3, enclosing_piece/7, empty_board/1, square/4]).
 :- use_module([library(lists), io, fill, board, winner]).
 
 play :- 
     welcome,
-    initial_board(Board),
+    initial_board_test(Board),
     display_board(Board),
-    is_black(Black).
+    is_black(Black),
     % TODO implement the predicate below:
-    % play(Black, Board).
+    play(Black, Board).
 
 match_list(0, 1, 0, Piece, [Piece]).
-match_list(0, 1, 0, Piece, [Piece | Tail]).
+match_list(0, 1, 0, Piece, [Piece | _]).
 match_list(0, Last, N, Piece, [Head | Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, Counter, Piece, Tail),
@@ -18,11 +18,11 @@ match_list(0, Last, N, Piece, [Head | Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, Counter, Piece, Tail),
     N is Counter.
-match_list(1, Last, N, Piece, [Head | Tail]) :-
+match_list(1, Last, N, Piece, [_ | Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, N, Piece, Tail),
     N > 0.
-match_list(First, Last, N, Piece, [Head | Tail]) :-
+match_list(First, Last, N, Piece, [_  | Tail]) :-
     First > 1, 
     NewFirst is First - 1,
     NewLast is Last - 1,
@@ -266,20 +266,34 @@ enclosing_piece(X, Y, Player, Board, U, V, N) :-
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ], U, V, N).
 
-*/
+    enclosing_piece(4, 3, '*', [
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','*',' ',' ',' '],
+    [' ',' ',' ','*','o',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], U, V, N).
 
-no_more_legal_squares(_, _, [],_).
-no_more_legal_squares(_,_,_,[]).
-no_more_legal_squares(Board, Player, [EmptyHead | EmptyTail], PlayerList) :-
-    not(EmptyHead = []),
-    try_wrapper(EmptyHead, X, Y),
-    not(enclosing_piece(X, Y, Player, Board, _, _, _, PlayerList)),
-    no_more_legal_squares(Board, Player, EmptyTail, PlayerList).
-no_more_legal_squares(Board, Player):-
+*/
+legal_squares(_,_, [],_):- false.
+legal_squares(Board, Player, [[A, B] | Tail], PlayerList) :-
+    enclosing_piece(A, B, Player, Board, _, _, _, PlayerList);
+    legal_squares(Board, Player, Tail, PlayerList).
+
+legal_squares(Board, Player) :-
     is_empty(Empty),
-    find_all_piece_locations(Board, Empty, EmptyList, 1, 1),
-    find_all_piece_locations(Board, Player, PlayerList, 1, 1),
-    no_more_legal_squares(Board, Player, EmptyList, PlayerList).
+    once(find_all_piece_locations(Board, Empty, EmptyList, 1, 1)),
+    once(find_all_piece_locations(Board, Player, PlayerList, 1, 1)),
+    %keeps backtracking and trying new lists, had to use once/1 to stop backtracking.
+    legal_squares(Board, Player, EmptyList, PlayerList).
+
+no_more_legal_squares(Board, Player) :-
+    not(legal_squares(Board, Player)).
+
+
 
 
 /*
@@ -287,7 +301,7 @@ no_more_legal_squares([
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ','o','o',' ',' ',' '],
-    [' ',' ','o','o','o',' ',' ',' '],
+    [' ','*','o','o','o',' ',' ',' '],
     [' ',' ','o',' ',' ',' ',' ',' '],
     [' ',' ','o',' ',' ','o',' ',' '],
     [' ','o',' ',' ',' ',' ',' ',' '],
@@ -297,7 +311,7 @@ no_more_legal_squares([
 no_more_legal_squares([
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ','o','o',' ',' ',' '],
+    [' ',' ',' ','o','o',' ',' ','*'],
     [' ',' ','o','o','o',' ',' ',' '],
     [' ',' ','o',' ',' ',' ',' ',' '],
     [' ',' ','o',' ',' ','o',' ',' '],
@@ -305,17 +319,24 @@ no_more_legal_squares([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ], 'o').
 
+no_more_legal_squares([
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','*',' ',' ',' '],
+    [' ',' ',' ','*','o',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], '*').
+
 */
 
 no_more_legal_squares(Board) :-
     is_black(Black),
-    is_empty(Empty),
-    find_all_piece_locations(Board, Empty, EmptyList, 1, 1),
-    find_all_piece_locations(Board, Black, BlackList, 1, 1),
-    no_more_legal_squares(Board, Black, EmptyList, BlackList),
     is_white(White),
-    find_all_piece_locations(Board, White, WhiteList, 1, 1),
-    no_more_legal_squares(Board, White, EmptyList, WhiteList).
+    no_more_legal_squares(Board, Black),
+    no_more_legal_squares(Board, White).
 
 /*
 no_more_legal_squares([
@@ -328,8 +349,34 @@ no_more_legal_squares([
     [' ','o',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ]).
+
+no_more_legal_squares([
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','*',' ',' ',' '],
+    [' ',' ',' ','*','o',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ]).
 */
 
 play(Player, Board_state) :- 
     no_more_legal_squares(Board_state),
-    and_the_winner_is(Board_state, Winner).
+    and_the_winner_is(Board_state, _);
+    no_more_legal_squares(Board_state, Player), 
+    report_no_move(Player),
+    other_player(Player, OtherPlayer),
+    play(OtherPlayer, Board_state);
+    get_legal_move(Player, X, Y, Board_state),
+    fill_and_flip_squares( X, Y, Player, Board_state, NewBoard), 
+    display_board(NewBoard),
+    other_player(Player, OtherPlayer),
+    play(OtherPlayer, NewBoard).
+
+
+test :-
+    initial_board(Board),
+    is_black(Black),
+    no_more_legal_squares(Black, Board).

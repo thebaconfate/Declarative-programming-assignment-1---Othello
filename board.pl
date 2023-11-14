@@ -1,4 +1,4 @@
-:- module(board, [row/3, column/3, is_black/1, is_white/1, is_empty/1, initial_board/1, other_player/2, square/4, empty_square/3, between0_9/1]).
+:- module(board, [row/3, column/3, is_black/1, is_white/1, is_empty/1, initial_board/1, other_player/2, square/4, empty_square/3, between0_9/1, empty_board/1, initial_board_test/1]).
 :- use_module([library(lists),
 io,
 fill]).
@@ -71,6 +71,17 @@ initial_board([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ]).
 
+initial_board_test([
+    [' ',' ',' ',' ','*',' ',' ',' '],
+    ['*',' ',' ',' ','*',' ',' ',' '],
+    ['*','*','*','*','*',' ',' ',' '],
+    ['*','o','o','o','o','o','o',' '],
+    [' ',' ','o','*','*',' ',' ',' '],
+    [' ',' ',' ',' ','*',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ]).
+
 %board_of_Xpieces(?Board_state, ?Piece) :- Succeeds if Board_state can be unified with a board state where all the squares are filled with Piece.
 board_of_Xpieces([], _).
 board_of_Xpieces([Head_rows | Rest_rows], Piece) :- 
@@ -79,12 +90,11 @@ board_of_Xpieces([Head_rows | Rest_rows], Piece) :-
 
 %empty_board(?Board_state) :- Succeeds if all the squares of the board van be unified with Piece and the empty square character.
 empty_board([
-    [AA,AB,AC,AD,AE,AF,AG,AH],
-    [BA,BB,BC,BD,BE,BF,BG,BH],
-    [CA,CB,CC,CD,CE,CF,CG,CH],
-    [DA,DB,DC,DD,DE,DF,DG,DH],
-    [EA,EB,EC,ED,EE,EF,EG,EH],
-    [FA,FB,FC,FD,FE,FF,FG,FH],
-    [GA,GB,GC,GD,GE,GF,GG,GH],
-    [HA,HB,HC,HD,HE,HF,HG,HH]
-    ]).
+    [_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_]]).
