@@ -19,7 +19,6 @@ match_list(0, Last, N, Piece, [Head | Tail]) :-
     match_list(0, NewLast, Counter, Piece, Tail),
     N is Counter.
 match_list(1, Last, N, Piece, [Head | Tail]) :-
-    is_empty(Head),
     NewLast is Last - 1,
     match_list(0, NewLast, N, Piece, Tail),
     N > 0.
@@ -194,8 +193,133 @@ enclosing_piece_try(7,2, '*', [
     ], 3, 6, N).
 
 */
-construct_locationlist_player_pieces(Player, Board, Locationlist) :-
-    findall(squ(X, Y, Player), square(X, Y, Board, squ(X, Y, Player)), Locationlist).
 
+%square(CoordX, CoordY, Board_state, squ(CoordX, CoordY, Piece))
+
+find_all_piece_locations(_, _, [], _, 9).
+find_all_piece_locations(Board, Player, List, 9, Y) :-
+    Ys is Y + 1,
+    find_all_piece_locations(Board, Player, List, 1, Ys).
+find_all_piece_locations(Board, Player, [[X, Y] | Tail], X, Y) :-
+    square(X, Y, Board, squ(X, Y, Player)),
+    Xs is X + 1,
+    find_all_piece_locations(Board, Player, Tail, Xs, Y).
+find_all_piece_locations(Board, Player, List , X, Y) :-
+    X < 9, Y < 9,
+    Xs is X + 1, 
+    find_all_piece_locations(Board, Player, List, Xs, Y).
+
+/*
+find_all_piece_locations([
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ','*',' ',' ',' ',' ',' '],
+    [' ',' ','*','o','o',' ',' ',' '],
+    [' ',' ',' ','o','o',' ',' ',' '],
+    [' ',' ','*',' ',' ','o',' ',' '],
+    [' ','*',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], '*', List, 1, 1).
+*/
+try_wrapper([A, B], A, B).
+enclosing_piece(_, _, _, _, _, _, _, []) :- fail.
+enclosing_piece(X, Y, Player, Board, U, V, N, [Head | Tail]) :-
+    try_wrapper(Head, U, V),
+    enclosing_piece_try(X, Y, Player, Board, U, V, N);
+    enclosing_piece(X, Y, Player, Board, U, V, N, Tail).
 enclosing_piece(X, Y, Player, Board, U, V, N) :-
-    construct_locationlist_player_pieces(Player, Board, Locationlist).
+    find_all_piece_locations(Board, Player, List, 1, 1),
+    not(List = []),
+    enclosing_piece(X, Y, Player, Board, U, V, N, List).
+
+/*
+    enclosing_piece(7,2, '*', [
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','o',' ',' ',' '],
+    [' ',' ','*','o','o',' ',' ',' '],
+    [' ',' ','*',' ',' ',' ',' ',' '],
+    [' ',' ','*',' ',' ','o',' ',' '],
+    [' ','*',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], U, V, N).
+
+    enclosing_piece(7,2, '*', [
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','o',' ',' ',' '],
+    [' ',' ','o','o','o',' ',' ',' '],
+    [' ',' ','o',' ',' ',' ',' ',' '],
+    [' ',' ','o',' ',' ','o',' ',' '],
+    [' ','o',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], U, V, N).
+
+    enclosing_piece(7,2, 'o', [
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','o',' ',' ',' '],
+    [' ',' ','o','o','o',' ',' ',' '],
+    [' ',' ','o',' ',' ',' ',' ',' '],
+    [' ',' ','o',' ',' ','o',' ',' '],
+    [' ','o',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], U, V, N).
+
+*/
+
+no_more_legal_squares(_, _, []).
+no_more_legal_squares(Board, Player, [Head | Tail]) :-
+    not(Head = []),
+    try_wrapper(Head, X, Y),
+    not(enclosing_piece(X, Y, Player, Board, _, _, _)),
+    no_more_legal_squares(Board, Player, Tail).
+no_more_legal_squares(Board, Player):-
+    is_empty(Empty),
+    find_all_piece_locations(Board, Empty, List, 1, 1),
+    no_more_legal_squares(Board, Player, List).
+
+
+/*
+no_more_legal_squares([
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','o',' ',' ',' '],
+    [' ',' ','o','o','o',' ',' ',' '],
+    [' ',' ','o',' ',' ',' ',' ',' '],
+    [' ',' ','o',' ',' ','o',' ',' '],
+    [' ','o',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], '*').
+
+no_more_legal_squares([
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','o',' ',' ',' '],
+    [' ',' ','o','o','o',' ',' ',' '],
+    [' ',' ','o',' ',' ',' ',' ',' '],
+    [' ',' ','o',' ',' ','o',' ',' '],
+    [' ','o',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], 'o').
+
+*/
+
+no_more_legal_squares(Board) :-
+    is_black(Black),
+    no_more_legal_squares(Board, Black),
+    is_white(White),
+    no_more_legal_squares(Board, White).
+
+/*
+no_more_legal_squares([
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','o','o',' ',' ','*'],
+    [' ',' ','o','o','o',' ',' ',' '],
+    [' ',' ','o',' ',' ',' ',' ',' '],
+    [' ',' ','o',' ',' ','o',' ',' '],
+    [' ','o',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ]).
+*/
