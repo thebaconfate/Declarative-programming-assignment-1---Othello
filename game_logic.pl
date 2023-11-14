@@ -268,16 +268,18 @@ enclosing_piece(X, Y, Player, Board, U, V, N) :-
 
 */
 
-no_more_legal_squares(_, _, []).
-no_more_legal_squares(Board, Player, [Head | Tail]) :-
-    not(Head = []),
-    try_wrapper(Head, X, Y),
-    not(enclosing_piece(X, Y, Player, Board, _, _, _)),
-    no_more_legal_squares(Board, Player, Tail).
+no_more_legal_squares(_, _, [],_).
+no_more_legal_squares(_,_,_,[]).
+no_more_legal_squares(Board, Player, [EmptyHead | EmptyTail], PlayerList) :-
+    not(EmptyHead = []),
+    try_wrapper(EmptyHead, X, Y),
+    not(enclosing_piece(X, Y, Player, Board, _, _, _, PlayerList)),
+    no_more_legal_squares(Board, Player, EmptyTail, PlayerList).
 no_more_legal_squares(Board, Player):-
     is_empty(Empty),
-    find_all_piece_locations(Board, Empty, List, 1, 1),
-    no_more_legal_squares(Board, Player, List).
+    find_all_piece_locations(Board, Empty, EmptyList, 1, 1),
+    find_all_piece_locations(Board, Player, PlayerList, 1, 1),
+    no_more_legal_squares(Board, Player, EmptyList, PlayerList).
 
 
 /*
@@ -307,9 +309,13 @@ no_more_legal_squares([
 
 no_more_legal_squares(Board) :-
     is_black(Black),
-    no_more_legal_squares(Board, Black),
+    is_empty(Empty),
+    find_all_piece_locations(Board, Empty, EmptyList, 1, 1),
+    find_all_piece_locations(Board, Black, BlackList, 1, 1),
+    no_more_legal_squares(Board, Black, EmptyList, BlackList),
     is_white(White),
-    no_more_legal_squares(Board, White).
+    find_all_piece_locations(Board, White, WhiteList, 1, 1),
+    no_more_legal_squares(Board, White, EmptyList, WhiteList).
 
 /*
 no_more_legal_squares([
