@@ -49,7 +49,9 @@ get_legal_move( Player, X, Y, Board ) :-
 	request_move( Player, column, X ),
 	request_move( Player, row, Y ),
 	user:empty_square( X, Y, Board ),
-	user:enclosing_piece( X, Y, Player, Board, _, _, _ ),
+	format('Empty square at X: ~w, Y: ~w\n', [X, Y]),
+	user:enclosing_piece( X, Y, Player, Board, U, V, N),
+	format('Enclosing piece at X: ~w, Y: ~w\n', [U, V]),
 	!.
 get_legal_move( Player, X, Y, Board ) :-
 	report_blocked,
