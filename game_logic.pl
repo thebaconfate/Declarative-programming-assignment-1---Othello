@@ -273,6 +273,10 @@ no_more_legal_squares([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ]
 */
+get_legal_ai_move(Player, X, Y, Board_state) :-
+    format('AI is thinking...~n'),
+    empty_square(X, Y, Board_state),
+    enclosing_piece(X, Y, Player, Board_state, _, _, _).
 
 play(Player, Board_state) :- 
     no_more_legal_squares(Board_state),
@@ -281,9 +285,28 @@ play(Player, Board_state) :-
     report_no_move(Player),
     other_player(Player, OtherPlayer),
     play(OtherPlayer, Board_state);
+    /*
+    code for section 3.6
     get_legal_move(Player, X, Y, Board_state),
     fill_and_flip_squares( X, Y, Player, Board_state, NewBoard), 
     display_board(NewBoard),
     other_player(Player, OtherPlayer),
     play(OtherPlayer, NewBoard).
+    */
+    is_black(Player),
+    get_legal_move(Player, X, Y, Board_state),
+    fill_and_flip_squares( X, Y, Player, Board_state, NewBoard),
+    display_board(NewBoard),
+    is_white(OtherPlayer),
+    play(OtherPlayer, NewBoard);
+    is_white(Player),
+    get_legal_ai_move(Player, X, Y, Board_state),
+    fill_and_flip_squares( X, Y, Player, Board_state, NewBoard),
+    report_move(Player, X, Y),
+    display_board(NewBoard),
+    is_black(OtherPlayer),
+    play(OtherPlayer, NewBoard).
+
+
+
 

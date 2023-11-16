@@ -1,4 +1,4 @@
-:- module(board, [row/3, column/3, is_black/1, is_white/1, is_empty/1, initial_board/1, other_player/2, square/4, empty_square/3, between0_9/1, empty_board/1, initial_board_test/1, valid_coord/1]).
+:- module(board, [row/3, column/3, is_black/1, is_white/1, is_empty/1, initial_board/1, other_player/2, square/4, empty_square/3, empty_board/1, initial_board_test/1, valid_coord/1]).
 :- use_module([library(lists),
 io,
 fill]).
