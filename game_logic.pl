@@ -1,5 +1,5 @@
 :- module(game_logic, [row/3, empty_square/3, enclosing_piece/7, empty_board/1, square/4]).
-:- use_module([library(lists), io, fill, board, winner]).
+:- use_module([library(lists), io, fill, board, winner, heuristics]).
 
 mirror(A, B) :- 
     valid_coord(A),
