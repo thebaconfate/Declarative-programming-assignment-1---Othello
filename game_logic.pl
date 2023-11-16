@@ -22,10 +22,12 @@ match_list(0, Last, N, Piece, [Head | Tail]) :-
     Last > 1,
     NewLast is Last - 1,
     match_list(0, NewLast, Counter, Piece, Tail),
-    other_player(Piece, Head), N is Counter + 1;
+    other_player(Piece, Head), N is Counter + 1.
+match_list(0, Last, N, Piece, [Piece | Tail]) :-
+    Last > 1,
     NewLast is Last - 1,
-    match_list(0, NewLast, Counter, Piece, Tail),
-    N is Counter.
+    match_list(0, NewLast, N, Piece, Tail),
+    N > 0.
 match_list(1, Last, N, Piece, [ _| Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, N, Piece, Tail),
@@ -129,8 +131,19 @@ find_all_piece_locations([
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ','o','*',' ',' ',' ',' '],
     [' ',' ','o','*',' ',' ',' ',' '],
+    [' ',' ',' ','*','o',' ',' ',' '],
+    [' ',' ',' ','*',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], U, V, N).
+
+enclosing_piece(1,5, 'o', [
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ','o','*',' ',' ',' ',' '],
-    [' ','*',' ',' ',' ',' ',' ',' '],
+    [' ',' ','o','*',' ',' ',' ',' '],
+    [' ',' ','o','*','o',' ',' ',' '],
+    [' ',' ',' ','*',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ], U, V, N).
 
@@ -276,7 +289,8 @@ no_more_legal_squares([
 get_legal_ai_move(Player, X, Y, Board_state) :-
     format('AI is thinking...~n'),
     empty_square(X, Y, Board_state),
-    enclosing_piece(X, Y, Player, Board_state, _, _, _).
+    enclosing_piece(X, Y, Player, Board_state, _, _, _),
+    format('AI wants to place at X: ~w Y: ~w', [X, Y]).
 
 play(Player, Board_state) :- 
     no_more_legal_squares(Board_state),
