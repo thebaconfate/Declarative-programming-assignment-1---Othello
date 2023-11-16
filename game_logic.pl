@@ -17,7 +17,7 @@ play :-
     play(Black, Board).
 
 match_list(0, 1, 0, Piece, [Piece]).
-match_list(0, 1, 0, Piece, [Piece | Tail]).
+match_list(0, 1, 0, Piece, [Piece | _ ]).
 match_list(0, Last, N, Piece, [Head | Tail]) :-
     Last > 1,
     NewLast is Last - 1,
@@ -26,11 +26,11 @@ match_list(0, Last, N, Piece, [Head | Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, Counter, Piece, Tail),
     N is Counter.
-match_list(1, Last, N, Piece, [Head | Tail]) :-
+match_list(1, Last, N, Piece, [ _| Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, N, Piece, Tail),
     N > 0.
-match_list(First, Last, N, Piece, [Head | Tail]) :-
+match_list(First, Last, N, Piece, [_ | Tail]) :-
     First > 1, 
     NewFirst is First - 1,
     NewLast is Last - 1,
@@ -182,7 +182,7 @@ find_all_piece_locations([
 
 legal_squares(Board, Player) :-
     empty_square(X, Y, Board),
-    enclosing_piece(X, Y, Player, Board, U, V, N).
+    enclosing_piece(X, Y, Player, Board, _, _, _).
 
 no_more_legal_squares(Board, Player) :-
     not(legal_squares(Board, Player)).
