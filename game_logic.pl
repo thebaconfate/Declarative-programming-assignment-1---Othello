@@ -301,3 +301,7 @@ test_legal_squares :-
         [' ',' ',' ',' ',' ',' ',' ',' '],
         [' ',' ',' ',' ',' ',' ',' ',' ']
         ])).
+
+test_game_logic :-
+    test_enclosing_piece,
+    test_legal_squares.

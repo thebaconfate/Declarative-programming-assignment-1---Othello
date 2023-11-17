@@ -70,7 +70,7 @@ choose_move(Player, X, Y, Board) :-
     block_edge_heuristic(Player, Board, X, Y);
     pick_biggest_n_heuristic(Player, Board, X, Y).
 
-test_heuristic :-
+test_heuristics :-
     take_corner_heuristic('o', [
         [' ',' ',' ',' ',' ',' ',' ',' '],
         [' ',' ',' ',' ',' ',' ',' ',' '],
