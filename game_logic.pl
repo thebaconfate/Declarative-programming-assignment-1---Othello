@@ -23,11 +23,6 @@ match_list(0, Last, N, Piece, [Head | Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, Counter, Piece, Tail),
     other_player(Piece, Head), N is Counter + 1.
-match_list(0, Last, N, Piece, [Piece | Tail]) :-
-    Last > 1,
-    NewLast is Last - 1,
-    match_list(0, NewLast, N, Piece, Tail),
-    N > 0.
 match_list(1, Last, N, Piece, [ _| Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, N, Piece, Tail),
@@ -125,6 +120,17 @@ find_all_piece_locations([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ], U, V, N).
 
+enclosing_piece(X, Y, 'o', [
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ','o',' ',' ',' ',' ',' ',' '],
+    [' ',' ','o','o','o',' ',' ',' '],
+    [' ',' ','*','','o',' ',' ',' '],
+    [' ',' ','*',' ',' ',' ',' ',' '],
+    [' ',' ','*',' ',' ','o',' ',' '],
+    [' ','*',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], U, V, N).
+
     enclosing_piece(6,4, 'o', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -144,7 +150,7 @@ enclosing_piece(1,5, 'o', [
     [' ',' ','o','*',' ',' ',' ',' '],
     [' ',' ','o','*','o',' ',' ',' '],
     [' ',' ',' ','*',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ']
+    [' ',' ',' ','o',' ',' ',' ',' ']
     ], U, V, N).
 
     enclosing_piece(7,2, '*', [
@@ -314,7 +320,7 @@ play(Player, Board_state) :-
     is_white(OtherPlayer),
     play(OtherPlayer, NewBoard);
     is_white(Player),
-    get_legal_ai_move(Player, X, Y, Board_state),
+    choose_move(Player, X, Y, Board),
     fill_and_flip_squares( X, Y, Player, Board_state, NewBoard),
     report_move(Player, X, Y),
     display_board(NewBoard),
