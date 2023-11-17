@@ -1,5 +1,5 @@
 :- module(game_logic, [row/3, empty_square/3, enclosing_piece/7, empty_board/1, square/4]).
-:- use_module([library(lists), io, fill, board, winner]).
+:- use_module([library(lists), io, fill, board, winner, heuristics]).
 
 mirror(A, B) :- 
     valid_coord(A),
@@ -13,24 +13,20 @@ play :-
     initial_board(Board),
     display_board(Board),
     is_black(Black),
-    % TODO implement the predicate below:
     play(Black, Board).
 
 match_list(0, 1, 0, Piece, [Piece]).
-match_list(0, 1, 0, Piece, [Piece | Tail]).
+match_list(0, 1, 0, Piece, [Piece | _ ]).
 match_list(0, Last, N, Piece, [Head | Tail]) :-
     Last > 1,
     NewLast is Last - 1,
     match_list(0, NewLast, Counter, Piece, Tail),
-    other_player(Piece, Head), N is Counter + 1;
-    NewLast is Last - 1,
-    match_list(0, NewLast, Counter, Piece, Tail),
-    N is Counter.
-match_list(1, Last, N, Piece, [Head | Tail]) :-
+    other_player(Piece, Head), N is Counter + 1.
+match_list(1, Last, N, Piece, [ _| Tail]) :-
     NewLast is Last - 1,
     match_list(0, NewLast, N, Piece, Tail),
     N > 0.
-match_list(First, Last, N, Piece, [Head | Tail]) :-
+match_list(First, Last, N, Piece, [_ | Tail]) :-
     First > 1, 
     NewFirst is First - 1,
     NewLast is Last - 1,
@@ -123,15 +119,37 @@ find_all_piece_locations([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ], U, V, N).
 
+enclosing_piece(X, Y, 'o', [
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ','o',' ',' ',' ',' ',' ',' '],
+    [' ',' ','o','o','o',' ',' ',' '],
+    [' ',' ','*','','o',' ',' ',' '],
+    [' ',' ','*',' ',' ',' ',' ',' '],
+    [' ',' ','*',' ',' ','o',' ',' '],
+    [' ','*',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], U, V, N).
+
     enclosing_piece(6,4, 'o', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ','o','*',' ',' ',' ',' '],
     [' ',' ','o','*',' ',' ',' ',' '],
-    [' ',' ','o','*',' ',' ',' ',' '],
-    [' ','*',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ','*','o',' ',' ',' '],
+    [' ',' ',' ','*',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' ']
+    ], U, V, N).
+
+enclosing_piece(1,5, 'o', [
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ','o','*',' ',' ',' ',' '],
+    [' ',' ','o','*',' ',' ',' ',' '],
+    [' ',' ','o','*','o',' ',' ',' '],
+    [' ',' ',' ','*',' ',' ',' ',' '],
+    [' ',' ',' ','o',' ',' ',' ',' ']
     ], U, V, N).
 
     enclosing_piece(7,2, '*', [
@@ -182,7 +200,7 @@ find_all_piece_locations([
 
 legal_squares(Board, Player) :-
     empty_square(X, Y, Board),
-    enclosing_piece(X, Y, Player, Board, U, V, N).
+    enclosing_piece(X, Y, Player, Board, _, _, _).
 
 no_more_legal_squares(Board, Player) :-
     not(legal_squares(Board, Player)).
@@ -273,6 +291,11 @@ no_more_legal_squares([
     [' ',' ',' ',' ',' ',' ',' ',' ']
     ]
 */
+get_legal_ai_move(Player, X, Y, Board_state) :-
+    format('AI is thinking...~n'),
+    empty_square(X, Y, Board_state),
+    enclosing_piece(X, Y, Player, Board_state, _, _, _),
+    format('AI wants to place at X: ~w Y: ~w', [X, Y]).
 
 play(Player, Board_state) :- 
     no_more_legal_squares(Board_state),
@@ -281,9 +304,24 @@ play(Player, Board_state) :-
     report_no_move(Player),
     other_player(Player, OtherPlayer),
     play(OtherPlayer, Board_state);
+    /*
+    code for section 3.6
     get_legal_move(Player, X, Y, Board_state),
     fill_and_flip_squares( X, Y, Player, Board_state, NewBoard), 
     display_board(NewBoard),
     other_player(Player, OtherPlayer),
     play(OtherPlayer, NewBoard).
-
+    */
+    is_black(Player),
+    get_legal_move(Player, X, Y, Board_state),
+    fill_and_flip_squares( X, Y, Player, Board_state, NewBoard),
+    display_board(NewBoard),
+    is_white(OtherPlayer),
+    play(OtherPlayer, NewBoard);
+    is_white(Player),
+    heuristics:choose_move(Player, X, Y, Board_state),
+    fill_and_flip_squares( X, Y, Player, Board_state, NewBoard),
+    report_move(Player, X, Y),
+    display_board(NewBoard),
+    is_black(OtherPlayer),
+    play(OtherPlayer, NewBoard).
