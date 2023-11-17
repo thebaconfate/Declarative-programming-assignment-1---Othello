@@ -2,9 +2,8 @@
 :- use_module([library(lists), board, game_logic, fill]).
 
 take_corner_heuristic(Player, Board, X, Y) :-
-    empty_square(X, Y, Board),
     corner(X), corner(Y),
-    enclosing_piece(X, Y, PLayer, Board, U, V, N).
+    legal_move(Player, Board, X, Y, _).
 
 edge(X, Y) :-
     corner(X), valid_coord(Y);
@@ -47,7 +46,7 @@ pick_biggest_n_heuristic(Player, Board, CoordX, CoordY):-
     last(Set, [_, CoordX, CoordY]).
 
 /*
-pick_biggest_n_heuristic('o', [
+take_corner_heuristic('o', [
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -57,6 +56,28 @@ pick_biggest_n_heuristic('o', [
     [' ',' ',' ','*',' ',' ',' ',' '],
     [' ',' ',' ','o',' ',' ',' ',' ']
     ], X, Y).
+
+block_corner_heuristic('o',[
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ','o','*',' ',' ',' ',' '],
+    [' ',' ','o','*',' ',' ',' ',' '],
+    [' ',' ','o','*','o',' ',' ',' '],
+    [' ',' ',' ','*',' ',' ',' ',' '],
+    [' ',' ',' ','o',' ',' ',' ',' ']
+    ], X, Y)
+
+take_edge_heuristic('o',[
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ','o','*',' ',' ',' ',' '],
+    [' ',' ','o','*',' ',' ',' ',' '],
+    [' ',' ','o','*','o',' ',' ',' '],
+    [' ',' ',' ','*',' ',' ',' ',' '],
+    [' ',' ',' ','o',' ',' ',' ',' ']
+    ], X, Y)
 */
 
 choose_move(Player, X, Y, Board) :-

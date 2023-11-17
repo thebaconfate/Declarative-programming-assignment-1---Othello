@@ -13,7 +13,6 @@ play :-
     initial_board(Board),
     display_board(Board),
     is_black(Black),
-    % TODO implement the predicate below:
     play(Black, Board).
 
 match_list(0, 1, 0, Piece, [Piece]).
@@ -320,13 +319,9 @@ play(Player, Board_state) :-
     is_white(OtherPlayer),
     play(OtherPlayer, NewBoard);
     is_white(Player),
-    choose_move(Player, X, Y, Board),
+    heuristics:choose_move(Player, X, Y, Board_state),
     fill_and_flip_squares( X, Y, Player, Board_state, NewBoard),
     report_move(Player, X, Y),
     display_board(NewBoard),
     is_black(OtherPlayer),
     play(OtherPlayer, NewBoard).
-
-
-
-
