@@ -1,5 +1,5 @@
 :- module(othello, [row/3, column/3, square/4, empty_square/3, empty_board/1, enclosing_piece/7]).
-:- use_module([game_logic, board, io, fill, heuristics, winner]).
+:- use_module([library(lists), io, fill]).
 
 %Board representation
 player_1_character('*').
