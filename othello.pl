@@ -300,7 +300,6 @@ block_edge_heuristic(Player, Board, A, B) :-
 % setof returns a sorted list of possibilities sorted N from small to large , last returns highest N coordinates
 pick_biggest_n_heuristic(Player, Board, CoordX, CoordY):-
     setof([N, CoordX1, CoordY1], legal_move(Player, Board, CoordX1, CoordY1, N), Set),
-    format('~w',[Set]),
     last(Set, [_, CoordX, CoordY]).
 
 % choose_move(+Player, -X, -Y, +Board)
