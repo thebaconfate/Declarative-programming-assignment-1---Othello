@@ -12,7 +12,7 @@ edge(X, Y) :-
 take_edge_heuristic(Player, Board, X, Y) :-
     empty_square(X, Y, Board),
     edge(X, Y),
-    enclosing_piece(X, Y, Player, Board, U, V, N).
+    enclosing_piece(X, Y, Player, Board, _, _, _).
 
 block_corner_heuristic(Player, Board, A, B) :-
     empty_square(X, Y, Board),
@@ -38,7 +38,7 @@ block_edge_heuristic(Player, Board, A, B) :-
 
 legal_move(Player, Board, X, Y, N):-
     empty_square(X, Y, Board),
-    enclosing_piece(X, Y, Player, Board, U, V, N).
+    enclosing_piece(X, Y, Player, Board, _, _, N).
 
 pick_biggest_n_heuristic(Player, Board, CoordX, CoordY):-
     setof([N, CoordX1, CoordY1], legal_move(Player, Board, CoordX1, CoordY1, N), Set),
