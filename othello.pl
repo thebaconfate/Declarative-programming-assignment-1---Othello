@@ -1,5 +1,8 @@
 :- module(othello, [row/3, column/3, square/4, empty_square/3, empty_board/1, enclosing_piece/7]).
 :- use_module([library(lists), io, fill]).
+% Author: Gérard Lichtert 1MA Computer Science: Software languages & software engineering
+% Rolnr: 0557513
+
 
 %Board representation
 player_1_character('*').
