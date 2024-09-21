@@ -1,5 +1,7 @@
 # Assignment 1 - Othello
 
+This is the Othello project that is mandatory for the Declarative Programming course at the VUB. The course was taken during 2023-2024.
+
 Author : Gérard Lichtert
 Student ID : 557513
 
